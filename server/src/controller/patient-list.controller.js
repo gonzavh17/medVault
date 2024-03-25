@@ -154,25 +154,3 @@ export const filterPatientsAlphabetically = async (req, res) => {
     res.status(500).json({ error: 'Error interno del servidor' });
   }
 };
-
-export const addConstultationToPatient = async (req, res) => {
-  const {patientId} = req.params
-  const {date, treatment} = req.body
-  
-  try {
-    const patient = await patientModel.findById(patientId);
-
-    if(!patient) {
-      return res.status(404).json({ message: 'Paciente no encontrado' });
-    }
-
-    patient.consultations.push({date, treatment})
-
-    await patient.save();
-    
-    res.status(200).json(patient);
-  } catch (error) {
-    console.error('Error al agregar consulta:', error);
-    res.status(500).send({ message: 'Error interno del servidor' });
-  }
-}

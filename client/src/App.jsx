@@ -15,7 +15,8 @@ import { AuthProvider } from "./context/AuthContext";
 import PatientContainer from "./container/PatientContainer";
 import PatiendDetailContainer from "./container/PatiendDetailContainer";
 import PatientDashboard from "./components/PatientDashboard";
-import SideBar from "./components/SideBar";
+import MedicProfile from "./components/MedicProfile";
+import ProfilePut from "./components/ProfilePut";
 
 function App() {
   return (
@@ -30,6 +31,8 @@ function App() {
             <Route path="/login" element={<Login />}></Route>
             <Route path="/register" element={<Register />}></Route>
             <Route path="/dashboard" element={<Dashboard />}></Route>
+            <Route path="/profile" element={<MedicProfile />}></Route>
+            <Route path="/profile/editProfile" element={<ProfilePut/>}></Route>
           </Routes>
         </BrowserRouter>
       </AuthProvider>

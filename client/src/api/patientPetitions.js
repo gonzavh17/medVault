@@ -29,3 +29,13 @@ export const addConsultation = async (patientId, consultationData) => {
         console.log('Error al agregar consulta al paciente:', error);
     }
 };
+
+export const deleteConsult = async (patientId, consultationId) => {
+    try {
+        const res = await deleteConsultation(patientId, consultationId);
+        return res.data
+    } catch (error) {
+        console.log('Error al eliminar paciente:', error);
+        throw error
+    }
+};

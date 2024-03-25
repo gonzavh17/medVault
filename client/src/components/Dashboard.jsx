@@ -12,8 +12,9 @@ function Dashboard() {
 
   useEffect(() => {
     const timer = setTimeout(() => {
+      <Spinner/>
       setIsLoading(false);
-    }, 500);
+    }, 200);
 
     return () => clearTimeout(timer);
   }, []);

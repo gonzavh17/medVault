@@ -1,22 +1,43 @@
-import React from "react";
+import React, { useState, useEffect} from "react";
 import { useForm } from "react-hook-form";
 import { useAuth } from "../context/AuthContext";
 import { Link } from "react-router-dom";
 import { addConsultation } from "../api/patientPetitions";
+import "react-confirm-alert/src/react-confirm-alert.css";
+import { confirmAlert } from "react-confirm-alert";
 
 function AddConsultation({ patient, patient_id }) {
   const { register, handleSubmit } = useForm();
   const { signin, isLogged } = useAuth();
+  const [addConsultState, setAddConsultState] = useState(false)
 
-  console.log('CONSULTA', patient_id)
   const onSubmit = async (data) => {
     const consultationData = {
-      date: data.date,
-      treatment: data.treatment
+        date: data.date,
+        treatment: data.treatment
     };
-    await addConsultation(patient_id, consultationData);
 
-  };
+    try {
+        await addConsultation(patient_id, consultationData);
+        setAddConsultState(true); // Establecer addConsultState como true después de agregar la consulta
+    } catch (error) {
+        console.error("Error al agregar consulta:", error);
+    }
+};
+
+useEffect(() => {
+  if (addConsultState) {
+      confirmAlert({
+          title: "Consulta agregada exitosamente",
+          buttons: [
+              {
+                  label: "Continuar",
+                  onClick: () => window.location.reload()
+              },
+          ],
+      });
+  }
+}, [addConsultState]);
 
   return (
     <div>
@@ -54,7 +75,7 @@ function AddConsultation({ patient, patient_id }) {
                     placeholder="Motivo"
                     required
                     {...register("treatment")}
-                    className="px-2 block w-full min-h-20"
+                    className="p-2 block w-full min-h-20"
                   />
                 </div>
               </div>

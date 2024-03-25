@@ -57,13 +57,13 @@ app.use(session({
 initializePassport()
 app.use(passport.initialize())
 app.use(passport.session())
-app.use((req, res, next) => {
+/* app.use((req, res, next) => {
   res.on('finish', () => {
     console.log('Cookies enviadas en la respuesta:', res.getHeaders()['set-cookie']);
   });
   next();
 });
-
+ */
 
 // 
 

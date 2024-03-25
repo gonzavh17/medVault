@@ -4,7 +4,8 @@ import {
   login,
   register,
   currentSession,
-  logout
+  logout,
+  updateUser
 } from "../controller/session.controller.js";
 import passport from "passport";
 
@@ -22,5 +23,6 @@ sessionRouter.post(
 );
 sessionRouter.get('/current', currentSession);
 sessionRouter.get("/logout", logout);
+sessionRouter.put("/updateUser/:id", updateUser);
 
 export default sessionRouter;

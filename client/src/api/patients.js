@@ -15,5 +15,8 @@ export const deletePatient = (patientId) => {
     return axios.delete(`${API}/patientList/deletePatient/${patientId}`);
 };
 export const addConsultationToPatient = (patientId, consultationData) => {
-    return axios.put(`${API}/patientList/consultation/${patientId}`, consultationData);
+    return axios.put(`${API}/consults/createConsult/${patientId}`, consultationData);
+};
+export const deleteConsultation = (patientId, consultationId) => {
+    return axios.delete(`${API}/consults/${patientId}/deleteConsult/${consultationId}`);
 };

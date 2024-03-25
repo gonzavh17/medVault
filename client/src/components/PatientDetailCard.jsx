@@ -6,10 +6,12 @@
     import { confirmAlert } from "react-confirm-alert";
     import { useNavigate } from "react-router-dom";
     import "react-confirm-alert/src/react-confirm-alert.css";
+    import { deleteConsultation } from "../api/patients";
 
     function PatientDetailCard({ patient, patient_id }) {
-    const [deleted, setDeleted] = useState(false); // Estado para indicar si el paciente ha sido eliminado
+    const [deleted, setDeleted] = useState(false); 
     const navigate = useNavigate();
+    const [actualizacion, setActualizacion] = useState(false);
 
     const handleShowConfirmation = () => {
         confirmAlert({
@@ -19,7 +21,6 @@
             {
             label: "Sí",
             onClick: () => {
-                // Acción a realizar si el usuario hace clic en "Sí"
                 handleDelete(patient);
             },
             },
@@ -31,11 +32,29 @@
         });
     };
 
-    // Función para manejar la eliminación del paciente
+    const handleShowConfirmationConsult = (patient_id, consultation_id) => {
+        confirmAlert({
+            title: "Confirmar",
+            message: `¿Estás seguro que deseas eliminar esta consulta?`,
+            buttons: [
+                {
+                    label: "Sí",
+                    onClick: () => {
+                        handleDeleteConsult(patient_id, consultation_id);
+                    },
+                },
+                {
+                    label: "No",
+                    onClick: () => {},
+                },
+            ],
+        });
+    };
+
     const handleDelete = (patient) => {
         deletePatient(patient.data._id)
         .then(() => {
-            setDeleted(true); // Establecer deleted a true después de eliminar el paciente
+            setDeleted(true);
             confirmAlert({
             title: "Paciente eliminado correctamente",
             buttons: [
@@ -50,15 +69,32 @@
         });
     };
 
-    // Redirigir a la lista de pacientes si deleted es true
+    const handleDeleteConsult = (patient_id, consultation_id) => {
+        deleteConsultation(patient_id, consultation_id)
+        .then(() => {
+            confirmAlert({
+                title: "Consulta eliminada correctamente",
+                buttons: [
+                    {
+                    label: "Continuar",
+                    onClick: () => window.location.reload()
+                    },
+                ],
+                });
+        })
+        .catch((error) => {
+            console.error("Error al eliminar consulta:", error);
+            // Aquí puedes manejar el error de acuerdo a tus necesidades
+        });
+    };
+
     if (deleted) {
         navigate("/patientList");
-        return null; // Evitar que se renderice el resto del componente después de la redirección
+        return null; 
     }
 
-    // Verificar si patient es null o undefined
     if (!patient) {
-        return <div>Loading...</div>; // Mostrar un mensaje de carga mientras se obtiene la información del paciente
+        return <div>Loading...</div>; 
     }
     return (
         <div className="flex ">
@@ -231,6 +267,13 @@
                             {consultation.treatment}
                         </dd>
                         </div>
+                        
+                        <button 
+                            className="text-sm leading-6 hover:underline text-red-500" // Estilo para el botón
+                            onClick={() => handleShowConfirmationConsult(patient_id, consultation._id)} // Llama a la función para mostrar la alerta de confirmación
+                        >
+                            Eliminar consulta
+                        </button>
                     </div>
                     ))}
                     

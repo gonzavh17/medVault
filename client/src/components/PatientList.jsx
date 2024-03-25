@@ -85,21 +85,20 @@ function PatientList({
                     ))}
                 </div>
                 <div className="flex items-center justify-between">
-    <button 
-        onClick={handlePrevPage} 
-        disabled={currentPage === 1} 
-        className="px-4 py-2  border-gray-300 bg-white text-gray-700 hover:bg-gray-100 focus:outline-none focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50">
-        PREVIOUS
-    </button>
-    <span className="text-gray-700">{currentPage} / {totalPages}</span>
-    <button 
-        className="flex items-center px-4 py-2  border-gray-300 bg-white text-gray-700 hover:bg-gray-100 focus:outline-none focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50"
-        onClick={handleNextPage} 
-        disabled={currentPage === totalPages}>
-        NEXT
-    </button>
-</div>
-
+                    <button 
+                        onClick={handlePrevPage} 
+                        disabled={currentPage === 1} 
+                        className="px-4 py-2  border-gray-300 bg-white text-gray-700 hover:bg-gray-100 focus:outline-none focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50">
+                        PREVIOUS
+                    </button>
+                    <span className="text-gray-700">{currentPage} / {totalPages}</span>
+                    <button 
+                        className="flex items-center px-4 py-2  border-gray-300 bg-white text-gray-700 hover:bg-gray-100 focus:outline-none focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50"
+                        onClick={handleNextPage} 
+                        disabled={currentPage === totalPages}>
+                        NEXT
+                    </button>
+                </div>
             </div>
         </div>
     );

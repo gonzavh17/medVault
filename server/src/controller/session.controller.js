@@ -60,6 +60,32 @@ export const login = async (req, res) => {
   }
 };
 
+export const updateUser = async (req, res) => {
+  try {
+    
+    const {id} = req.params
+    const{ body } = req
+
+    const existingUser = await userModel.findById(id)
+
+
+    if(!existingUser) {
+      return res.status(404).json({ message: "Usuario no encontrado" });
+    }
+
+    if (body.password) {
+      delete body.password;
+    }
+
+
+    await userModel.findByIdAndUpdate(id, body, {new: true})
+    return res.status(200).json({ message: "Usuario actualizado correctamente" });
+  } catch (error) {
+    res.status(500).send({ mensaje: `Error al iniciar sesion ${error}` });
+  }
+}
+
+
 export const currentSession = async (req, res) => {
   if (req.user) {
     res.status(200).send(req.user);
@@ -74,7 +100,7 @@ export const logout = async (req, res) => {
     try {
       req.session.destroy();
       res.clearCookie("jwtCookie");
-      res.status(200).send({ resultado: "Has cerrado sesion" });
+      res.redirect("/"); 
     } catch (error) {
       res.status(400).send({ error: `Error al cerrar sesion: ${error}` });
     }
