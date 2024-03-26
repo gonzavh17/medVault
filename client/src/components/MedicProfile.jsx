@@ -3,13 +3,36 @@ import { useAuth } from "../context/AuthContext";
 import SideBar from "./SideBar";
 import { Spinner } from "@material-tailwind/react";
 import { Link } from "react-router-dom";
+import { confirmAlert } from "react-confirm-alert";
+import "react-confirm-alert/src/react-confirm-alert.css";
+import { useNavigate } from 'react-router-dom'
 
 function MedicProfile() {
   const { currentUser } = useAuth();
+  const navigate = useNavigate()
 
   if (!currentUser) {
     return <Spinner />;
   }
+
+  const handleShowConfirmation = () => {
+    confirmAlert({
+    title: "Confirmar",
+    message: `¿Estas seguro que deseas editar el perfil?`,
+    buttons: [
+        {
+        label: "Sí",
+        onClick: () => {
+            navigate('/editProfile')
+        },
+        },
+        {
+        label: "No",
+        onClick: () => {},
+        },
+    ],
+    });
+};
 
   return (
     <div className="flex h-screen">
@@ -26,11 +49,11 @@ function MedicProfile() {
           <p className="text-gray-700">Género: {currentUser.gender}</p>
         </div>
         <div className="mt-4">
-          <Link to='editProfile'>
-          <button className="px-4 py-2 hover:underline bg-blue-500 text-white rounded hover:bg-blue-600 transition duration-300 ease-in-out">
+         
+          <button onClick={() => handleShowConfirmation()} className="px-4 py-2 hover:underline bg-blue-500 text-white rounded hover:bg-blue-600 transition duration-300 ease-in-out">
             Editar Perfil
           </button>
-          </Link>
+
         </div>
       </div>
     </div>

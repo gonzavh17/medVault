@@ -24,15 +24,16 @@ function App() {
       <AuthProvider>
         <BrowserRouter>
           <Routes>
-            <Route path="/patientList" element={<PatientContainer />}></Route>
-            <Route path="/patient/:patient_id" element={<PatiendDetailContainer/>}></Route>
-            <Route path="/patientDashboard" element={<PatientDashboard />}></Route>
             <Route path="/" element={<Home />}></Route>
             <Route path="/login" element={<Login />}></Route>
             <Route path="/register" element={<Register />}></Route>
+
+            <Route path="/patientList" element={<PatientContainer />}></Route>
+            <Route path="/patient/:patient_id" element={<PatiendDetailContainer/>}></Route>
+            <Route path="/patientDashboard" element={<PatientDashboard />}></Route>
             <Route path="/dashboard" element={<Dashboard />}></Route>
             <Route path="/profile" element={<MedicProfile />}></Route>
-            <Route path="/profile/editProfile" element={<ProfilePut/>}></Route>
+            <Route path="/editProfile" element={<ProfilePut/>}></Route>
           </Routes>
         </BrowserRouter>
       </AuthProvider>

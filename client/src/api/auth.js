@@ -8,3 +8,4 @@ export const registerRequest = user => axios.post(`${API}/session/register`, use
 export const loginRequest = user => axios.post(`${API}/session/login`, user)
 export const currentRequest = user => axios.get(`${API}/session/current`, user)
 export const logout = () => axios.get(`${API}/session/logout`);
+export const updateUserRequest = (userId, userData) => axios.put(`${API}/session/updateUser/${userId}`, userData);

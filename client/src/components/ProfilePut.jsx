@@ -1,39 +1,71 @@
-import React, {useEffect} from 'react'
+import React, {useEffect, useState} from 'react'
 import SideBar from './SideBar'
 import { Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { useAuth } from "../context/AuthContext";
 import { useNavigate } from 'react-router-dom'
+import { updateUserRequest } from '../api/auth';
+import { confirmAlert } from "react-confirm-alert";
+import "react-confirm-alert/src/react-confirm-alert.css";
 
 function ProfilePut() {
     
-    const { register, handleSubmit, setValue } = useForm();
-    const {signup, isAuthenticated} = useAuth()
-    const navigate = useNavigate()
-    
-    const {currentUser} = useAuth()
+  const { register, handleSubmit, setValue } = useForm();
+  const { currentUser } = useAuth();
+  const navigate = useNavigate();
 
-    useEffect(() => {
-        async function loadUser() {
-            if (currentUser) {
-                console.log(currentUser);
-                setValue('first_name', currentUser.first_name)
-                setValue('last_name', currentUser.last_name)
-                setValue('email', currentUser.email)
-                setValue('age', currentUser.age)
-                setValue('occupation', currentUser.occupation)
-                setValue('gender', currentUser.gender)
-            }
-        }
-    
-        loadUser();
-    }, [currentUser]);
-    
-    
-    const onSubmit = async (data) => {
-      console.log(data)
-      signup(data)
-    };
+  useEffect(() => {
+    async function loadUser() {
+      if (currentUser) {
+        setValue('first_name', currentUser.first_name);
+        setValue('last_name', currentUser.last_name);
+        setValue('email', currentUser.email);
+        setValue('age', currentUser.age);
+        setValue('occupation', currentUser.occupation);
+        setValue('gender', currentUser.gender);
+      }
+    }
+
+    loadUser();
+  }, [currentUser]);
+
+  const onSubmit = async (data) => {
+    try {
+      const userId = currentUser._id;
+      await updateUserRequest(userId, data);
+      navigate('/profile');
+      confirmAlert({
+        title: 'Perfil actualizado',
+        message: 'Tu perfil ha sido actualizado correctamente.',
+        buttons: [
+          {
+            label: 'Aceptar',
+            onClick: () => window.location.reload(), // Recargar la página después de aceptar
+          },
+        ],
+      });
+    } catch (error) {
+      console.error('Error al actualizar el perfil:', error);
+    }
+  };
+
+  const handleShowConfirmation = (e) => {
+    e.preventDefault(); // Evitar que el formulario se envíe automáticamente
+    confirmAlert({
+      title: 'Confirmar',
+      message: '¿Estás seguro que deseas editar el perfil?',
+      buttons: [
+        {
+          label: 'Sí',
+          onClick: () => handleSubmit(onSubmit)(), // Llama a handleSubmit con onSubmit
+        },
+        {
+          label: 'No',
+          onClick: () => {},
+        },
+      ],
+    });
+  };
 
 
   return (
@@ -180,6 +212,15 @@ function ProfilePut() {
               </div>
             </div>
 
+            <div>
+              <button
+              onClick={handleShowConfirmation}
+                type="submit"
+                className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+              >
+                Register
+              </button>
+            </div>
           </form>
 
           
