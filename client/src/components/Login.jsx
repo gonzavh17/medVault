@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom'
 
 function Login() {
   const { register, handleSubmit } = useForm();
-  const { signin, isLogged } = useAuth()
+  const { signin, isLogged, isAuthenticated } = useAuth()
   const navigate = useNavigate()
 
   const onSubmit = (data) => {
@@ -14,10 +14,10 @@ function Login() {
   };
 
   useEffect(() => {
-    if(isLogged){
+    if(isAuthenticated){
       navigate('/dashboard')
     }
-  }, [isLogged])
+  }, [isAuthenticated])
 
   return (
     <div className="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
