@@ -96,15 +96,87 @@ export const currentSession = async (req, res) => {
 
 
 export const logout = async (req, res) => {
-  if (req.session.user) {
+  if (req.session.passport && req.session.passport.user) {
     try {
-      req.session.destroy();
-      res.clearCookie("jwtCookie");
-      res.redirect("/"); 
+      const user = req.session.passport.user;
+      if (req.isAuthenticated()) {
+        req.session.destroy(() => {
+          console.log("Sesión destruida");
+          res.clearCookie("jwtCookie");
+          res.redirect("/");
+        });
+      } else if (user.googleId) {
+        console.log("Usuario autenticado con Google");
+        req.logOut(); 
+        req.session.destroy(() => {
+          console.log("Sesión destruida");
+          res.send("Goodbye!");
+        });
+      } else {
+        console.log("No se detectó ninguna estrategia de inicio de sesión");
+        res.status(400).send({ error: "No se detectó ninguna estrategia de inicio de sesión" });
+      }
     } catch (error) {
-      res.status(400).send({ error: `Error al cerrar sesion: ${error}` });
+      console.error("Error al cerrar sesión:", error);
+      res.status(400).send({ error: `Error al cerrar sesión: ${error}` });
     }
   } else {
-    res.status(400).send({ error: `No hay sesion iniciada` });
+    console.log("No hay sesión iniciada");
+    res.status(400).send({ error: "No hay sesión iniciada" });
+  }
+};
+
+
+
+// GOOGLE AUTH
+
+
+export const loginGoogleAuth = async (req, res) => {
+  try {
+    const { profile } = req.user;
+
+    // Verificar si el usuario ya existe en la base de datos
+    const existingUser = await userModel.findOne({ googleId: profile.id });
+    
+    if (existingUser) {
+      // Si el usuario existe, simplemente devolverlo
+      const { displayName, email } = existingUser;
+      const user = { displayName, email };
+
+      const token = generateToken(req.session.user);
+
+      // Configurar la cookie
+      res.cookie("jwtCookie", token, {
+        maxAge: 43200000,
+        httpOnly: true, // Asegúrate de configurar las opciones de seguridad adecuadas para tu cookie
+      });
+
+      // Enviar la respuesta con el payload del usuario existente
+      return res.status(200).send({ payload: user });
+    } else {
+      // Si el usuario no existe, crear uno nuevo
+      const newUser = await userModel.create({
+        googleId: profile.id,
+        displayName: profile.displayName,
+        email: profile.email,
+      });
+
+      const { displayName, email } = newUser;
+      const user = { displayName, email };
+
+      const token = generateToken(req.session.user);
+
+      // Configurar la cookie
+      res.cookie("jwtCookie", token, {
+        maxAge: 43200000,
+        httpOnly: true, // Asegúrate de configurar las opciones de seguridad adecuadas para tu cookie
+      });
+
+      // Enviar la respuesta con el payload del nuevo usuario creado
+      return res.status(200).send({ payload: user });
+    }
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({ mensaje: `Error al iniciar sesión ${error}` });
   }
 };

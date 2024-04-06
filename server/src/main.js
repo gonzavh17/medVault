@@ -8,6 +8,7 @@ import session from 'express-session'
 import passport from "passport";
 import MongoStore from 'connect-mongo'
 import cors from 'cors'
+import './config/googleAuth.js'
 
 // Imports
 
@@ -19,6 +20,8 @@ const PORT = 8080
 
 // Cors
 
+
+
 app.use(cors({
   origin: 'http://localhost:5173',
   credentials: true
@@ -26,9 +29,7 @@ app.use(cors({
 
 // Server
 
-app.listen(PORT, () => {
-    console.log(`Server running on PORT ${PORT}`);
-});
+
 
 
 //DB Connection
@@ -44,8 +45,7 @@ mongoose
 
 // Middlewares
 
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+
 app.use(cookieParser(process.env.COOKIE_SECRET))
 app.use(session({
   secret: process.env.SESSION_SECRET,
@@ -55,17 +55,20 @@ app.use(session({
   })
 }))
 initializePassport()
+
 app.use(passport.initialize())
 app.use(passport.session())
-/* app.use((req, res, next) => {
-  res.on('finish', () => {
-    console.log('Cookies enviadas en la respuesta:', res.getHeaders()['set-cookie']);
-  });
-  next();
-});
- */
 
-// 
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+/* app.use((req, res, next) => {
+res.on('finish', () => {
+  console.log('Cookies enviadas en la respuesta:', res.getHeaders()['set-cookie']);
+});
+next();
+}); */
+
+app.get("/auth/google", passport.authenticate("google"));
 
 app.use('/', router)
 
@@ -76,3 +79,7 @@ app.get("/", (req, res) => {
 app.get("*", (req, res) => {
     res.status(404).send("Error 404");
   });
+
+  app.listen(PORT, () => {
+    console.log(`Server running on PORT ${PORT}`);
+});

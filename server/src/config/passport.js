@@ -4,6 +4,8 @@ import passport from 'passport'
 import userModel from '../models/user.model.js'
 import { createHash, validatePassword } from '../utils/bcrypt.js'
 import jwt from 'passport-jwt'
+import GoogleStrategy from 'passport-google-oauth20'
+import findOrCreate from 'mongoose-findorcreate'
 
 const LocalStrategy = local.Strategy;
 const JWTStrategy = jwt.Strategy
@@ -85,6 +87,7 @@ const initializePassport = () => {
         const user = await userModel.findById(id);
         done(null, user);
       });
+
 }
 
 export default initializePassport

@@ -1,5 +1,5 @@
 import { createContext, useContext, useState, useEffect } from "react";
-import { registerRequest, loginRequest, currentRequest } from "../api/auth";
+import { registerRequest, loginRequest, currentRequest, googleLoginRequest } from "../api/auth";
 import { useNavigate } from 'react-router-dom'
 
 export const AuthContext = createContext();
@@ -28,6 +28,7 @@ export const AuthProvider = ({ children }) => {
             const userData = res.data;
             setCurrentUser(userData);
             console.log('CurrentUser', userData); 
+            setIsAuthenticated(true)
             setIsLogged(true);
 
             // Establecer el tiempo de expiración del token
@@ -78,22 +79,30 @@ export const AuthProvider = ({ children }) => {
         fetchCurrentUser();
     }, []);
 
-    // Manejar el tiempo de expiración del token
+
     useEffect(() => {
         const checkTokenExpiration = () => {
             const now = new Date();
             if (tokenExpiration && now > tokenExpiration) {
-                // El token ha expirado, desautenticar al usuario y redirigir a la página de inicio de sesión
                 setIsAuthenticated(false);
                 setUser(null);
-                // También podrías redirigir al usuario a la página de inicio de sesión aquí
             }
         };
 
-        const interval = setInterval(checkTokenExpiration, 1000); // Verificar cada segundo
+        const interval = setInterval(checkTokenExpiration, 1000); 
 
-        return () => clearInterval(interval); // Limpiar el intervalo cuando el componente se desmonte
+        return () => clearInterval(interval); 
     }, [tokenExpiration]);
 
-    return <AuthContext.Provider value={{signup, user, isAuthenticated, signin, isLogged, currentUser}}>{children}</AuthContext.Provider>;
+
+    const googleSignin = async () => {
+        try {
+            const response = await googleLoginRequest();
+            // Si la respuesta es exitosa, establece isAuthenticated en true
+            setIsAuthenticated(true);
+        } catch (error) {
+            console.error('Error al iniciar sesión con Google:', error);
+        }
+    };
+    return <AuthContext.Provider value={{signup, user, googleSignin, isAuthenticated, signin, isLogged, currentUser}}>{children}</AuthContext.Provider>;
 };
