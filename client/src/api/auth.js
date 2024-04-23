@@ -12,5 +12,5 @@ export const updateUserRequest = (userId, userData) => axios.put(`${API}/session
 
 // GOOGLE
 export const logout = () => axios.get(`http://localhost:8080/logout`);
-export const googleLoginRequest = () => axios.get(`http://localhost:8080/auth/google/callback`);
+export const googleLoginRequest = () => axios.get(`http://localhost:8080/auth/google`);
 

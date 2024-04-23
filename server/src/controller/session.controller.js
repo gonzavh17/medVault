@@ -2,6 +2,8 @@ import path from "path";
 import userModel from "../models/user.model.js";
 import { generateToken } from "../utils/jwt.js";
 import { serialize } from "v8";
+import axios from 'axios'
+import 'dotenv/config'
 
 export const register = async (req, res) => {
   try {
@@ -68,7 +70,6 @@ export const updateUser = async (req, res) => {
 
     const existingUser = await userModel.findById(id)
 
-
     if(!existingUser) {
       return res.status(404).json({ message: "Usuario no encontrado" });
     }
@@ -76,7 +77,6 @@ export const updateUser = async (req, res) => {
     if (body.password) {
       delete body.password;
     }
-
 
     await userModel.findByIdAndUpdate(id, body, {new: true})
     return res.status(200).json({ message: "Usuario actualizado correctamente" });
@@ -135,48 +135,73 @@ export const loginGoogleAuth = async (req, res) => {
   try {
     const { profile } = req.user;
 
-    // Verificar si el usuario ya existe en la base de datos
     const existingUser = await userModel.findOne({ googleId: profile.id });
     
     if (existingUser) {
-      // Si el usuario existe, simplemente devolverlo
+      // Si el usuario ya existe, devuelve el usuario existente
       const { displayName, email } = existingUser;
       const user = { displayName, email };
 
+      req.session.user = user; // Establece req.session.user
+
       const token = generateToken(req.session.user);
 
-      // Configurar la cookie
       res.cookie("jwtCookie", token, {
         maxAge: 43200000,
-        httpOnly: true, // Asegúrate de configurar las opciones de seguridad adecuadas para tu cookie
+        httpOnly: true,
       });
 
-      // Enviar la respuesta con el payload del usuario existente
       return res.status(200).send({ payload: user });
     } else {
-      // Si el usuario no existe, crear uno nuevo
-      const newUser = await userModel.create({
+      // Si el usuario no existe, crea un nuevo usuario
+      const newUser = new userModel({
         googleId: profile.id,
         displayName: profile.displayName,
         email: profile.email,
+        isGoogleAuthenticated: true, // Aquí establece isGoogleAuthenticated como true
       });
+
+      await newUser.save(); // Guarda el nuevo usuario en la base de datos
 
       const { displayName, email } = newUser;
       const user = { displayName, email };
 
+      req.session.user = user; // Establece req.session.user
+
       const token = generateToken(req.session.user);
 
-      // Configurar la cookie
       res.cookie("jwtCookie", token, {
         maxAge: 43200000,
-        httpOnly: true, // Asegúrate de configurar las opciones de seguridad adecuadas para tu cookie
+        httpOnly: true, 
       });
 
-      // Enviar la respuesta con el payload del nuevo usuario creado
       return res.status(200).send({ payload: user });
     }
   } catch (error) {
     console.log(error);
     res.status(500).send({ mensaje: `Error al iniciar sesión ${error}` });
+  }
+};
+
+// Obtener accessToken
+
+export const getAccessToken = async (refreshToken) => {
+  try {
+    /* console.log('ClientId:', process.env.GOOGLE_CLIENT_ID)
+    console.log('ClientIdSecret:',  process.env.GOOGLE_CLIENT_SECRET)
+    console.log('refresh Token:',  refreshToken) */
+
+    console.log('Iniciando solicitud de AccessToken...');
+    const response = await axios.post('https://oauth2.googleapis.com/token', {
+      refresh_token: refreshToken,
+      client_id: process.env.GOOGLE_CLIENT_ID,
+      client_secret: process.env.GOOGLE_CLIENT_SECRET,
+      grant_type: 'refresh_token'
+    });
+    console.log('Respuesta de la solicitud de AccessToken:', response.data);
+    return response.data.access_token;
+  } catch (error) {
+    console.error('Error al obtener el AccessToken:', error);
+    throw error; // Re-lanzar el error para que lo maneje el código que llama a esta función
   }
 };

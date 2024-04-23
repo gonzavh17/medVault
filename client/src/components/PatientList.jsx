@@ -30,7 +30,7 @@ function PatientList({
 
     const { currentUser } = useAuth();
 
-    console.log("Pacientes actuales:", patientsOnList);
+    console.log("Pacientes actuales:", patientsOnList.length);
     console.log(currentPage);
 
     return (

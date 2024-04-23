@@ -7,7 +7,6 @@ function Home() {
 
   const { user, isAuthenticated } = useAuth
 
-
   return (
     <div className="min-h-screen">
       <div className="grid grid-cols-2 min-h-screen">

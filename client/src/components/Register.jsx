@@ -7,14 +7,14 @@ import { useNavigate } from 'react-router-dom'
 
 function Register() {
   const { register, handleSubmit } = useForm();
-  const {signup, isAuthenticated} = useAuth()
+  const {signup, isAuthenticated, isRegistered} = useAuth()
   const navigate = useNavigate()
 
   useEffect(() => {
-    if(isAuthenticated){
+    if(isRegistered){
       navigate('/login')
     }
-  }, [isAuthenticated])
+  }, [isRegistered])
   
   const onSubmit = async (data) => {
     console.log(data)

@@ -7,7 +7,7 @@ import Spinner from "./Spinner";
 import { Link } from "react-router-dom";
 
 function Dashboard() {
-  const { currentUser } = useAuth();
+  const { currentUser, howIsLogged, isAuthenticatedWithGoogle } = useAuth();
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -18,6 +18,8 @@ function Dashboard() {
 
     return () => clearTimeout(timer);
   }, []);
+
+  console.log(isAuthenticatedWithGoogle)
 
   return (
     <div className="flex">
@@ -31,12 +33,12 @@ function Dashboard() {
               Crear nuevo paciente
             </li>
           </Link>
-          <Link to="/testPatient">
+          <Link to="/calendar">
             <li className="text-blue-500 hover:underline cursor-pointer">
               Agendar turno
             </li>
           </Link>
-          <Link to="/testPatient">
+          <Link to="/profile">
             <li className="text-blue-500 hover:underline cursor-pointer">
               Modificar Perfil
             </li>

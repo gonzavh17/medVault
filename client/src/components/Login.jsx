@@ -4,35 +4,13 @@ import { useForm } from "react-hook-form";
 import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import "dotenv";
+import GoogleLogin from "./GoogleLogin";
 
 
 function Login() {
   const { register, handleSubmit } = useForm();
   const { signin, isLogged, isAuthenticated, googleSignin } = useAuth();
   const navigate = useNavigate();
-
-  console.log(import.meta.env.VITE_ID_CLIENT);
-  const clientId = '477941959071-pfi2o0og8s9n0mjhfr0vjsbhm104fsip.apps.googleusercontent.com';
-
-function handleCallBackResponse(response) {
-  console.log('Encoded JWT ID token', response.credential)
-  googleSignin();
-/*   navigate('/dashboard') */
-}
-
-  useEffect(() => {
-   
-    google.accounts.id.initialize({
-      client_id: clientId,
-      callback: handleCallBackResponse
-    })
-
-
-    google.accounts.id.renderButton(
-      document.getElementById('signInDiv'),
-      {theme: 'outline', size: 'large'}
-    )
-  }, [])
 
 
 
@@ -130,20 +108,7 @@ function handleCallBackResponse(response) {
           </Link>
         </p>
 
-        <div id="signInDiv" className="signInDiv"></div>
-
-       {/*  <div>
-          <GoogleLogin
-            clientId={clientId}
-            buttonText="Autorizar Calendario"
-            onSuccess={responseGoogle}
-            onFailure={responseError}
-            cookiePolicy={"single_host_origin"}
-
-            responseType="code"
-            accessType="offline"
-          />
-        </div> */}
+        <GoogleLogin/>
       </div>
     </div>
   );

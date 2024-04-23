@@ -5,6 +5,7 @@ import patientListRouter from "./patient-list.routes.js";
 import testRouter from "./test.routes.js";
 import consultsRouter from "./consultation.routes.js";
 import googleRouter from "./google.routes.js";
+import googleCalendarRouter from "./google-calendar.routes.js";
 
 const router = Router()
 
@@ -14,6 +15,7 @@ router.use('/api/patientList', patientListRouter)
 router.use('/api/test', testRouter)
 router.use('/api/consults', consultsRouter)
 router.use('', googleRouter)
+router.use('', googleCalendarRouter)
 
 
 export default router

@@ -17,9 +17,11 @@ export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
     const [currentUser, setCurrentUser] = useState(null);
     const [isAuthenticated, setIsAuthenticated] = useState(false);
+    const [isAuthenticatedLocally, setIsAuthenticatedLocally] = useState(false);
+    const [isAuthenticatedWithGoogle, setIsAuthenticatedWithGoogle] = useState(false);
     const [isLogged, setIsLogged] = useState(false);
-    const [tokenExpiration, setTokenExpiration] = useState(null); // Nuevo estado para el tiempo de expiración del token
-
+    const [tokenExpiration, setTokenExpiration] = useState(null);
+    const [isRegistered, setIsRegistered] = useState(false)
     console.log(isAuthenticated);
 
     const getCurrentUser = async () => {
@@ -30,12 +32,24 @@ export const AuthProvider = ({ children }) => {
             console.log('CurrentUser', userData); 
             setIsAuthenticated(true)
             setIsLogged(true);
-
-            // Establecer el tiempo de expiración del token
-            const tokenExpiresAt = new Date(userData.expiresAt); // Suponiendo que 'expiresAt' contiene la fecha de expiración del token
-            setTokenExpiration(tokenExpiresAt);
         } catch (error) {
             console.log(error);
+        }
+    };
+
+    const howIsLogged = async () => {
+        try {
+            const userData = await getCurrentUser();
+            console.log('USUARIO', userData);
+            if (userData.googleId) {
+                console.log('Logueado con google', isAuthenticatedWithGoogle);
+                setIsAuthenticatedWithGoogle(true);
+            } else {
+                setIsAuthenticatedLocally(true);
+                console.log('Logueo local');
+            }
+        } catch (error) {
+            console.error(error);
         }
     };
     
@@ -44,8 +58,7 @@ export const AuthProvider = ({ children }) => {
             const res = await registerRequest(user);
             const userData = res.data.payload;
             setUser(userData);
-            setIsAuthenticated(true);
-    
+            setIsRegistered(true)
             // Llama a getCurrentUser después de iniciar sesión
             getCurrentUser();
         } catch (error) {
@@ -104,5 +117,5 @@ export const AuthProvider = ({ children }) => {
             console.error('Error al iniciar sesión con Google:', error);
         }
     };
-    return <AuthContext.Provider value={{signup, user, googleSignin, isAuthenticated, signin, isLogged, currentUser}}>{children}</AuthContext.Provider>;
+    return <AuthContext.Provider value={{signup, user, googleSignin, isAuthenticated, signin, isLogged, currentUser, howIsLogged, isRegistered}}>{children}</AuthContext.Provider>;
 };

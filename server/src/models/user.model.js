@@ -36,14 +36,21 @@ const userSchema = new Schema({
   googleRefreshToken: String, 
   username: {
     type: String
-}
+  },
+  isGoogleAuthenticated: {
+    type: Boolean,
+    default: false, 
+  },
+  googleRefreshToken: String,
 });
 
 userSchema.plugin(findOrCreate)
 userSchema.pre("save", async function (next) {
   try {
+   // Verificar si el displayName tiene dos nombres
+   if (this.username) {
     // Verificar si el displayName tiene dos nombres
-    if (this.username && this.username.split(" ").length > 1) {
+    if (this.username.split(" ").length > 1 && this.isGoogleAuthenticated) {
       const names = this.username.split(" ");
       // Asignar el primer nombre al campo first_name
       this.first_name = names[0];
@@ -54,6 +61,7 @@ userSchema.pre("save", async function (next) {
       this.first_name = this.username;
       this.last_name = "";
     }
+  }
 
     const patientList = new PatientListModel();
     await patientList.save();

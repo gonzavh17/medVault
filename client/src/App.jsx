@@ -22,6 +22,10 @@ import {gapi} from 'gapi-script'
 import { useEffect } from "react";
 import 'dotenv'
 import GoogleLogin from "./components/GoogleLogin";
+import Calendar from "./components/Calendar";
+import { LocalizationProvider } from '@mui/x-date-pickers';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
+
 
 function App() {
 
@@ -31,6 +35,7 @@ function App() {
 
   return (
     <div className="App">
+      <LocalizationProvider dateAdapter={AdapterDayjs}>
       <AuthProvider>
         <BrowserRouter>
           <Routes>
@@ -41,7 +46,7 @@ function App() {
               <Route path="/googleLogin" element={<GoogleLogin />}></Route>
                           
             <Route element={<ProtectedRoute/>}>
-            
+              <Route path="/calendar" element={<Calendar/>}></Route>
               <Route path="/patientList" element={<PatientContainer />}></Route>
               <Route path="/patient/:patient_id" element={<PatiendDetailContainer/>}></Route>
               <Route path="/patientDashboard" element={<PatientDashboard />}></Route>
@@ -53,6 +58,7 @@ function App() {
           </Routes>
         </BrowserRouter>
       </AuthProvider>
+      </LocalizationProvider>
     </div>
   );
 }

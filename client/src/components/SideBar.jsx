@@ -112,6 +112,7 @@ export default function SideBar() {
               </span>
             </ListItem>
           </Link>
+          <Link to='/calendar'>
           <ListItem>
             <ListItemPrefix>
               <CalendarIcon className="h-5 w-5" />
@@ -124,6 +125,7 @@ export default function SideBar() {
               Calendar
             </span>
           </ListItem>
+          </Link>
           <Link to="/profile">
             <ListItem>
               <ListItemPrefix>

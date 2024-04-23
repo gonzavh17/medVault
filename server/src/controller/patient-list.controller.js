@@ -34,7 +34,6 @@ export const getPatientList = async (req, res) => {
 
     let patients = patientList.patientList.map((item) => item.patient);
 
-    // Ordenar pacientes alfabéticamente por nombre
     patients.sort((a, b) => {
       return a.name.localeCompare(b.name);
     });
@@ -59,9 +58,6 @@ export const getPatientList = async (req, res) => {
     res.status(500).send({ message: error.message });
   }
 };
-
-
-
 
 export const getPatientById = async (req, res) => {
   try {
@@ -129,7 +125,7 @@ export const updatePatient = async (req, res) => {
     if (!patient) {
       return res.status(404).json({ message: "Paciente no encontrado" });
     }
-
+    
     Object.assign(patient, updatedData);
 
     const updatedPatient = await patient.save();

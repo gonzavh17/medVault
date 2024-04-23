@@ -1,5 +1,4 @@
 import patientModel from "../models/patients.model.js";
-import consultationModel from "../models/consultations.model.js";
 
 export const addConstultationToPatient = async (req, res) => {
     const {patientId} = req.params
