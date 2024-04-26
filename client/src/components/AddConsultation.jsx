@@ -5,39 +5,50 @@ import { Link } from "react-router-dom";
 import { addConsultation } from "../api/patientPetitions";
 import "react-confirm-alert/src/react-confirm-alert.css";
 import { confirmAlert } from "react-confirm-alert";
+import { DemoItem } from '@mui/x-date-pickers/internals/demo';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import dayjs from 'dayjs';
 
 function AddConsultation({ patient, patient_id }) {
   const { register, handleSubmit } = useForm();
   const { signin, isLogged } = useAuth();
-  const [addConsultState, setAddConsultState] = useState(false)
+  const [addConsultState, setAddConsultState] = useState(false);
+  const [date, setDate] = useState(dayjs()); // Inicializar la fecha con el valor actual
+
+  const handleDateChange = (date) => {
+    setDate(date);
+
+  };
 
   const onSubmit = async (data) => {
+    const formattedDate = dayjs(date).format('DD-MM-YYYY');
+    console.log('Fecha seleccionada:', formattedDate);
     const consultationData = {
-        date: data.date,
-        treatment: data.treatment
+      date: date,
+      treatment: data.treatment
     };
 
     try {
-        await addConsultation(patient_id, consultationData);
-        setAddConsultState(true); // Establecer addConsultState como true después de agregar la consulta
+      await addConsultation(patient_id, consultationData);
+      setAddConsultState(true); // Establecer addConsultState como true después de agregar la consulta
     } catch (error) {
-        console.error("Error al agregar consulta:", error);
+      console.error("Error al agregar consulta:", error);
     }
-};
+  };
 
-useEffect(() => {
-  if (addConsultState) {
+  useEffect(() => {
+    if (addConsultState) {
       confirmAlert({
-          title: "Consulta agregada exitosamente",
-          buttons: [
-              {
-                  label: "Continuar",
-                  onClick: () => window.location.reload()
-              },
-          ],
+        title: "Consulta agregada exitosamente",
+        buttons: [
+          {
+            label: "Continuar",
+            onClick: () => window.location.reload()
+          },
+        ],
       });
-  }
-}, [addConsultState]);
+    }
+  }, [addConsultState]);
 
   return (
     <div>
@@ -52,17 +63,9 @@ useEffect(() => {
           <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
             <div className="flex items-center justify-center border-b py-3">
               <div className="w-1/3"> {/* Ajusta el tamaño del input de la izquierda */}
-                
-                <div className="mt-2 ">
-                  <input
-                    id="date"
-                    name="date"
-                    type="date"
-                    required
-                    {...register("date")}
-                    className="flex px-2 w-full py-1.5 justify-center"
-                  />
-                </div>
+                <DemoItem>
+                  <DatePicker label="Fecha de consulta" value={date} onChange={handleDateChange}/>
+                </DemoItem>
               </div>
 
               <div className="w-2/3 ml-4"> {/* Ajusta el tamaño del input de la derecha */}
@@ -96,4 +99,4 @@ useEffect(() => {
   );
 }
 
-export default AddConsultation;
+export default AddConsultation

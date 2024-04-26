@@ -73,7 +73,7 @@ export default function SideBar() {
   return (
     <div className="flex h-screen overflow-hidden">
       <Card
-        className={`h-full w-[calc(100vw-20rem)] max-w-[20rem] p-4 shadow-xl shadow-blue-gray-900/5 transition-width ease-in-out duration-300 transform ${
+        className={`h-full w-[calc(100vw-20rem)] max-w-[20rem] pt-4 shadow-xl shadow-blue-gray-900/5 transition-width ease-in-out duration-300 transform ${
           isSidebarOpen ? "w-72" : "w-20"
         } fixed inset-y-0 left-0 z-10 bg-white`}
       >
@@ -82,7 +82,7 @@ export default function SideBar() {
             <Bars3Icon className="h-6 w-6" />
           </button>
         </div>
-        <div className="mb-2 p-4"></div>
+        
         <List>
           <Link to="/dashboard">
             <ListItem>
@@ -90,7 +90,7 @@ export default function SideBar() {
                 <HomeIcon className="h-5 w-5" />
               </ListItemPrefix>
               <span
-                className={`transition-opacity duration-300 p-2 ${
+                className={`transition-opacity duration-300 px-2 ${
                   !isSidebarOpen ? "opacity-0" : "opacity-100"
                 }`}
               >
@@ -118,7 +118,7 @@ export default function SideBar() {
               <CalendarIcon className="h-5 w-5" />
             </ListItemPrefix>
             <span
-              className={`transition-opacity duration-300 p-2 ${
+              className={`transition-opacity duration-300 px-2 ${
                 !isSidebarOpen ? "opacity-0" : "opacity-100"
               }`}
             >
@@ -132,7 +132,7 @@ export default function SideBar() {
                 <UserCircleIcon className="h-5 w-5" />
               </ListItemPrefix>
               <span
-                className={`transition-opacity duration-300 p-2 ${
+                className={`transition-opacity duration-300 px-2 ${
                   !isSidebarOpen ? "opacity-0" : "opacity-100"
                 }`}
               >
@@ -148,7 +148,7 @@ export default function SideBar() {
               <PowerIcon className="h-5 w-5" />
             </ListItemPrefix>
             <span
-              className={`transition-opacity duration-300 p-2 ${
+              className={`transition-opacity duration-300 px-2 ${
                 !isSidebarOpen ? "opacity-0" : "opacity-100"
               }`}
             >

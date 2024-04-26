@@ -1,5 +1,5 @@
 import "./App.css";
-import Home from "./components/Home";
+import Landing from "./components/Landing";
 import Login from "./components/Login";
 import {
   BrowserRouter as Router,
@@ -25,6 +25,7 @@ import GoogleLogin from "./components/GoogleLogin";
 import Calendar from "./components/Calendar";
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
+import Footer from "./components/Footer";
 
 
 function App() {
@@ -40,10 +41,12 @@ function App() {
         <BrowserRouter>
           <Routes>
             
-              <Route path="/" element={<Home />}></Route>
+
+              <Route path="/" element={<Landing />}></Route>
               <Route path="/login" element={<Login />}></Route>
               <Route path="/register" element={<Register />}></Route>
               <Route path="/googleLogin" element={<GoogleLogin />}></Route>
+
                           
             <Route element={<ProtectedRoute/>}>
               <Route path="/calendar" element={<Calendar/>}></Route>
@@ -55,9 +58,11 @@ function App() {
               <Route path="/editProfile" element={<ProfilePut/>}></Route>
             </Route>
             
+
           </Routes>
         </BrowserRouter>
       </AuthProvider>
+   <Footer/>
       </LocalizationProvider>
     </div>
   );

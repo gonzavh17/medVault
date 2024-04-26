@@ -8,6 +8,8 @@ import { DesktopDateTimePicker } from '@mui/x-date-pickers/DesktopDateTimePicker
 import dayjs from 'dayjs';
 import axios from 'axios'
 import GoogleCalendarLink from './GoogleCalendarLink';
+import { confirmAlert } from "react-confirm-alert";
+import "react-confirm-alert/src/react-confirm-alert.css";
 
 function Calendar() {
     const { register, handleSubmit } = useForm();
@@ -28,12 +30,30 @@ function Calendar() {
         setEndDate(date);
         console.log('Fecha de finalización seleccionada:', date);
     };
+
+    const handleShowConfirmation = () => {
+        confirmAlert({
+            title: 'Confirmar',
+            message: '¿Estás seguro que deseas agendar este turno?',
+            buttons: [
+              {
+                label: 'Sí',
+                onClick: () => handleSubmit(onSubmit)(), // Llama a handleSubmit con onSubmit
+              },
+              {
+                label: 'No',
+                onClick: () => {},
+              },
+            ],
+          });
+    }
+  
     
     const onSubmit = async (data, date) => {
 
         console.log('Fecha de inicio en onSubmit:', startDate);
     console.log('Fecha de finalización en onSubmit:', endDate);
-        // Obtener los datos del formulario
+
         const eventName = data.summary; 
         const eventDescription = data.description; 
         
@@ -43,7 +63,6 @@ function Calendar() {
             return; // Salir de la función si no se han seleccionado ambas fechas
         }
     
-        // Crear el objeto de evento con las fechas seleccionadas
         const event = {
             'summary': eventName,
             'description': eventDescription,
@@ -64,6 +83,18 @@ function Calendar() {
             console.error('Error al crear el evento:', error);
         }
     };
+
+    if(isEventCreated) {
+        confirmAlert({
+            title: 'Turno agendado correctamente',
+            message: `${dayjs(startDate).format('DD/MM/YYYY HH:mm')} - ${dayjs(endDate).format('DD/MM/YYYY HH:mm')}`,
+            buttons: [
+              {
+                label: 'Aceptar',
+              },
+            ],
+          });
+    }
     
 
     console.log('Calendar user', currentUser);
@@ -102,7 +133,7 @@ function Calendar() {
                                 className="space-y-6"
                                 action="#"
                                 method="POST"
-                                onSubmit={handleSubmit(onSubmit)}
+                                onSubmit={handleSubmit(handleShowConfirmation)}
                             >
                                 {/* Campos del formulario */}
                                 {/* Consulta */}

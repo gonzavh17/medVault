@@ -5,6 +5,7 @@ import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import "dotenv";
 import GoogleLogin from "./GoogleLogin";
+import Footer from "./Footer";
 
 
 function Login() {
@@ -26,7 +27,7 @@ function Login() {
   }, [isAuthenticated]);
 
   return (
-    <div className="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
+    <div className="flex min-h-screen flex-col justify-center px-6 py-12 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-sm">
         <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
           Sign in to your account
@@ -55,7 +56,7 @@ function Login() {
             </div>
           </div>
 
-          <div>
+          <div className="">
             <div className="flex items-center justify-between">
               <label
                 htmlFor="password"
@@ -95,20 +96,37 @@ function Login() {
           </div>
         </form>
 
-        <p className="mt-10 text-center text-sm text-gray-500">
-          Don't have an account?
+        <p className="mt-10 text-center text-sm text-gray-500 mb-5">
+          No tienes una cuenta?
           <Link to="/register">
             <a
               href="#"
               className="font-semibold leading-6 text-indigo-600 hover:text-indigo-500"
             >
               {" "}
-              register
+              registrarse
             </a>
           </Link>
         </p>
+        <div>
+  <GoogleLogin/>
+</div>
+<p className="mt-2 text-center text-sm text-gray-500">
+  Recomendado: Inicia sesión con Google para sincronizar tu calendario.
+</p>
 
-        <GoogleLogin/>
+<div className="mt-2 text-center">
+  <Link to="/">
+    <button className="text-indigo-600 hover:text-indigo-500 font-semibold">
+      Volver al inicio
+    </button>
+  </Link>
+</div>
+
+
+
+        
+        
       </div>
     </div>
   );
