@@ -71,11 +71,18 @@ export default function SideBar() {
   }, [logoutState]);
 
   return (
-    <div className="flex h-screen overflow-hidden">
-      <Card
-        className={`h-full w-[calc(100vw-20rem)] max-w-[20rem] pt-4 shadow-xl shadow-blue-gray-900/5 transition-width ease-in-out duration-300 transform ${
-          isSidebarOpen ? "w-72" : "w-20"
-        } fixed inset-y-0 left-0 z-10 bg-white`}
+    <div className="flex h-screen overflow-hidden z-50">
+
+      <div className="block">
+        <button className="top-4 left-4 absolute" onClick={toggleSidebar}>
+          <Bars3Icon className="h-6 w-6" />
+        </button>
+      </div>
+
+      {/* Card component */}
+      <div className={`h-full max-w-[20rem] pt-4 shadow-xl shadow-blue-gray-900/5 transition-all ease-in-out duration-300 transform ${
+          isSidebarOpen ? "w-72" : "hidden md:w-full"
+        } fixed w-20 bg-white`}
       >
         <div className="flex justify-center items-center m-5">
           <button className="top-4 left-4 absolute" onClick={toggleSidebar}>
@@ -156,7 +163,7 @@ export default function SideBar() {
             </span>
           </ListItem>
         </List>
-      </Card>
+      </div>
     </div>
   );
-}
+};
